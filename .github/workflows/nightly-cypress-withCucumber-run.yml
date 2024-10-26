@@ -1,0 +1,49 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Runs nightly at midnight UTC
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Create the cypress.env.json file from secrets
+      - name: Create cypress.env.json
+        run: |
+          echo '${{ secrets.CYPRESS_ENV_FILE }}' > ./cypress.env.json
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run Cypress tests
+      - name: Run Cypress tests
+        run: npx cypress run
+
+      # Upload Cypress screenshots as an artifact
+      - name: Upload Cypress Screenshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      # Upload Cypress videos as an artifact (if video recording is enabled)
+      - name: Upload Cypress Videos
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-videos
+          path: cypress/videos
