@@ -1,7 +1,7 @@
 {
     "stepDefinitions": [
         "cypress/e2e/**/[filepath].ts",
-        "cypress/e2e/shared-step-definitions/*.ts"
+        "cypress/e2e/ui-desktop/shared-step-definitions/*.ts"
     ],
     "filterSpecs": true,
     "omitFiltered": true,

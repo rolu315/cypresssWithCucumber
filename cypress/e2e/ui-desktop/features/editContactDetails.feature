@@ -1,17 +1,17 @@
-Feature: Edit Contact
-    As an authenticated user
-    I want to edit a contact
-    So that I can update contact information in my contact list
+Feature: Contacts can be edited and changes confirmed
 
     Background:
-        Given I am logged in as an existing user
+        Given I am logged into the contact list application
 
-    Scenario: Successfully edit a contact
-        Given I am on the contact list page
-        When I add a new contact
-        And I navigate to the contact details of the new contact
-        Then I should see the correct contact details
+    Scenario: Edit a contact and confirm the updated information
+        Given I have added a new contact with generated data
+        When I navigate to the newly added contact's details page
+        Then I should see the contact's details displayed correctly
 
-        When I edit the contact information
-        Then I should be redirected to the contact list page
-        And I should see the updated contact in the contact list
+        When I edit the contact with new generated data
+        Then I should see the updated contact details on the details page
+
+        When I return to the contact list
+        Then I should see the updated contact in the contact list
+        And I should not see the original contact in the contact list
+

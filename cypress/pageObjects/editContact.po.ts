@@ -1,54 +1,70 @@
 class editContact {
 
-    editContactFirstName() {
-        return cy.get('input[name="firstName"]');
+    editContactFirstName(firstName: string) {
+        cy.get('input[id="firstName"]').clear().type(firstName);
+        return this;
     }
 
-    editContactLastName() {
-        return cy.get('input[name="lastName"]');
+    editContactLastName(lastName: string) {
+        cy.get('input[id="lastName"]').clear().type(lastName);
+        return this;
     }
 
-    editContactDateOfBirth() {
-        return cy.get('input[name="dateOfBirth"]');
+    editContactEmail(email: string) {
+        cy.get('input[id="email"]').clear().type(email);
+        return this;
     }
 
-    editContactEmail() {
-        return cy.get('input[name="email"]');
+    editContactPhone(phoneNumber: string) {
+        cy.get('input[id="phone"]').clear().type(phoneNumber);
+        return this;
     }
 
-    editContactPhone() {
-        return cy.get('input[name="phone"]');
+    editContactDateOfBirth(dateOfBirth: string) {
+        cy.get('input[id="birthdate"]').clear().type(dateOfBirth);
+        return this;
     }
 
-    editContactStreetAddress1() {
-        return cy.get('input[name="streetAddress1"]');
+    editContactStreetAddress1(address: string) {
+        cy.get('input[id="street1"]').clear().type(address);
+        return this;
     }
 
-    editContactStreetAddress2() {
-        return cy.get('input[name="streetAddress2"]');
+    editContactStreetAddress2(address: string) {
+        cy.get('input[id="street2"]').clear().type(address);
+        return this;
     }
 
-    editContactCity() {
-        return cy.get('input[name="city"]');
+    editContactCity(city: string) {
+        cy.get('input[id="city"]').clear().type(city);
+        return this;
     }
 
-    editContactState() {
-        return cy.get('input[name="state"]');
+    editContactState(state: string) {
+        cy.get('input[id="stateProvince"]').clear().type(state);
+        return this;
     }
 
-    editContactZip() {
-        return cy.get('input[name="zip"]');
+    editContactPostalCode(postalCode: string) {
+        cy.get('input[id="postalCode"]').clear().type(postalCode);
+        return this;
     }
 
-    editContactCountry() {
-        return cy.get('input[name="country"]');
+    editContactCountry(country: string) {
+        cy.get('input[id="country"]').clear().type(country);
+        return this;
     }
 
     submit() {
-        return cy.get('button[type="submit"]');
+        cy.get('button[id="submit"]').click();
     }
 
     cancel() {
-        return cy.get('button[type="button"]');
+        cy.get('button[id="cancel"]').click();
     }
 }
+
+export const editContactPage = new editContact();
+
+
+

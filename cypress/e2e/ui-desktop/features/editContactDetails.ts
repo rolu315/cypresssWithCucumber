@@ -1,62 +1,82 @@
-import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 import { addContact } from "pageObjects/addContact.po";
 import { contactDetails } from "pageObjects/contactDetails.po";
 import { contactListPage } from "pageObjects/contactList.po";
-import { loginPage } from "pageObjects/login.po";
+import { editContactPage } from "pageObjects/editContact.po";
+import randomlyEditContactFields from "utilities/utilities";
 
-Given("I am logged in as an existing user", () => {
-  loginPage.existingUserLogin();
-});
-
-Given("I am on the contact list page", () => {
-  cy.url().should("include", "/contactList");
-});
-
-When("I add a new contact", () => {
-  cy.generateContactData().then((contactData) => {
+Given("I have added a new contact with generated data", () => {
+  cy.generateContactData().then((data) => {
+    cy.wrap(data).as("contactData"); 
     contactListPage.addContact();
-    addContact.enterAllContactData(contactData).submit();
-    cy.wrap(contactData).as("contactData");
+    addContact.enterAllContactData(data).submit();
   });
 });
 
-When("I navigate to the contact details of the new contact", () => {
+When("I navigate to the newly added contact's details page", () => {
   cy.get("@contactData").then((contactData: any) => {
-    cy.get(".contacts")
-      .contains("td", `${contactData.firstName} ${contactData.lastName}`)
+    cy.get('.contacts')
+      .contains('td', `${contactData.firstName} ${contactData.lastName}`)
       .parent()
       .within(() => {
-        cy.get("td").eq(1).click();
+        cy.get('td').eq(1).click();
       });
+    cy.url().should('include', '/contactDetails');
   });
-  cy.url().should("include", "/contactDetails");
 });
 
-Then("I should see the correct contact details", () => {
+Then("I should see the contact's details displayed correctly", () => {
   cy.get("@contactData").then((contactData: any) => {
-    contactDetails.getContactFirstName().should("contain", contactData.firstName);
-    contactDetails.getContactLastName().should("contain", contactData.lastName);
+    contactDetails.getContactFirstName().should('contain', contactData.firstName);
+    contactDetails.getContactLastName().should('contain', contactData.lastName);
   });
 });
 
-When("I edit the contact information", () => {
+When("I edit the contact with new generated data", () => {
   contactDetails.getEditContactButton().click();
-  cy.url().should("include", "/editContact");
+  cy.url().should('include', '/editContact');
 
-  cy.generateContactData().then((updatedContactData) => {
-    addContact.enterAllContactData(updatedContactData).submit();
-    cy.wrap(updatedContactData).as("updatedContactData");
+  cy.generateContactData().then((updatedData) => {
+    const modifiedData = randomlyEditContactFields(updatedData);
+    cy.wrap(modifiedData).as("modifiedData"); 
+    editContactPage.submit();
   });
 });
 
-Then("I should be redirected to the contact list page", () => {
-  cy.url().should("include", "/editContact");
+Then("I should see the updated contact details on the details page", () => {
+  cy.get("@modifiedData").then((modifiedData: any) => {
+    if (modifiedData.firstName) {
+      contactDetails.getContactFirstName().should("contain", modifiedData.firstName);
+    }
+    if (modifiedData.lastName) {
+      contactDetails.getContactLastName().should("contain", modifiedData.lastName);
+    }
+  });
+});
+
+When("I return to the contact list", () => {
+  contactDetails.getReturnToContactListButton().click();
+  cy.url().should('include', '/contactList');
 });
 
 Then("I should see the updated contact in the contact list", () => {
-  cy.get("@updatedContactData").then((updatedContactData: any) => {
-    cy.get(".contacts")
-      .contains("td", `${updatedContactData.firstName} ${updatedContactData.lastName}`)
-      .should("exist");
+  cy.get("@modifiedData").then((modifiedData: any) => {
+    cy.get("@contactData").then((contactData: any) => {
+      cy.get('.contacts')
+        .contains('td', `${modifiedData.firstName || contactData.firstName} ${modifiedData.lastName || contactData.lastName}`)
+        .should('exist');
+    });
+  });
+});
+
+Then("I should not see the original contact in the contact list", () => {
+  cy.get("@contactData").then((contactData: any) => {
+    cy.get("@modifiedData").then((modifiedData: any) => {
+      if (modifiedData.firstName || modifiedData.lastName) {
+        cy.get('.contacts')
+          .contains('td', `${contactData.firstName} ${contactData.lastName}`)
+          .should('not.exist');
+      }
+    });
   });
 });
