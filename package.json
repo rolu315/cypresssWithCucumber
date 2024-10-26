@@ -1,0 +1,25 @@
+{
+  "name": "cypressswithcucumber",
+  "version": "1.0.0",
+  "description": "This repository houses my implementation of Cypress for end-to-end testing with an implementation of Cucumber",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:record": "cypress run --record --key cdd52de5-ac51-42a2-9b9c-3fdc31e77259",
+    "open": "cypress open",
+    "cli": "cypress run"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^21.0.2",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.3",
+    "@faker-js/faker": "^9.0.3",
+    "@types/node": "^22.7.6",
+    "cypress": "^13.15.0",
+    "esbuild": "^0.24.0",
+    "junit-report-builder": "^3.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
