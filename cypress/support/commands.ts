@@ -14,7 +14,8 @@ declare global {
             createRestIntercept(method: string, url: string, alias: string): Chainable<any>;
             generateContactData(): Chainable<any>;
             createUser(): Chainable<any>;
-            handleConfirmDialog(expectedMessage: string, accept?: boolean): Chainable
+            handleConfirmDialog(expectedMessage: string, accept?: boolean): Chainable<any>;
+            apiRequest(options: Cypress.RequestOptions): Chainable<any>;
         }
     }
 }
@@ -81,3 +82,9 @@ Cypress.Commands.add('createUser', () => {
     };
     cy.wrap(newUser);
 });
+
+Cypress.Commands.add('apiRequest', (options) => {
+    const host = Cypress.env('host');
+    const url = host + options.url;
+    return cy.request({ ...options, url });
+  });

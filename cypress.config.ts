@@ -22,7 +22,7 @@ export default defineConfig({
   },
   video: false,
   env: {
-    host: 'https://thinking-tester-contact-list.herokuapp.com',
+    host: 'https://api.thedogapi.com',
   },
   e2e: {
     specPattern: '**/*.feature',
